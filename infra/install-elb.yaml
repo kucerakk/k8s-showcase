@@ -1,0 +1,11 @@
+- hosts: localhost
+  name: "Provision ELB"
+  tasks:
+  - name: Create Load Balancer
+    opentelekomcloud.cloud.loadbalancer:
+      cloud: "{{ elb.cloud }}"
+      name: "{{ elb.name }}"
+      vip_subnet: "{{ elb.vip_subnet | default(omit) }}"
+      vip_address: "{{ elb.vip_address | default(omit) }}"
+      public_ip_address: "{{ elb.public_ip_address | default(omit) }}"
+  

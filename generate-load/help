@@ -1,0 +1,10 @@
+#kubectl autoscale deployment kosice --cpu-percent=50 --min=1 --max=10
+#kubectl autoscale deployment bratislava --cpu-percent=50 --min=1 --max=10
+# 
+# exec to POD
+# cat /dev/zero > /dev/null &
+# kubectl top pod
+
+
+#kubectl run -i --tty load-generator-ke --rm --image=quay.io/kucerakk/busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://kosice; done"
+#kubectl run -i --tty load-generator-ba --rm --image=quay.io/kucerakk/busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://bratislava; done"

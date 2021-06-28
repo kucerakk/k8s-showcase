@@ -1,0 +1,74 @@
+apiVersion: v1
+data:
+  index.html: |
+    <iframe
+      width="1200"
+      height="900"
+      style="border:0"
+      loading="lazy"
+      allowfullscreen
+      src="https://www.google.com/maps/embed/v1/place?key=API_KEY&q=Bratislava">
+    </iframe> 
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: bratislava
+  selfLink: /api/v1/namespaces/default/configmaps/bratislava
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: bratislava
+  name: bratislava
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: bratislava
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: bratislava
+    spec:
+      containers:
+      - image: quay.io/kucerakk/nginx
+        name: bratislava
+        volumeMounts:
+        - name: bratislava
+          mountPath: /usr/share/nginx/html/
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+      volumes:
+        - name: bratislava
+          configMap: 
+            name: bratislava
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: bratislava
+  name: bratislava
+  selfLink: /api/v1/namespaces/default/services/bratislava
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: bratislava
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

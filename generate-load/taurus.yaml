@@ -1,0 +1,11 @@
+execution:
+- concurrency: 500
+  ramp-up: 10s
+  hold-for: 2m
+  scenario: TwoCheckout
+ 
+scenarios:
+  TwoCheckout:
+    default-address: https://kosice.freeddns.org
+    requests: 
+      - /

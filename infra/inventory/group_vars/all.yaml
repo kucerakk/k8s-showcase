@@ -1,0 +1,46 @@
+---
+bastion_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpavJU13nHTtNauL7LSRD7OZulxY1iuAf6hSuORorzZfC0m09Js4xYTj5roYo3BZfEDXODriCBtcMhoZi3eNxvMoS2OHiSpHM8xI668wGKOFY0dYJF4ij/KUrD7iYkwmKjBVirn/d3+ZHUUPayvf9G267/vIbUMvXVsAhZlxUObd/ezu7AvBQqy27OZly8P+HhMBD9831Ytvho9inxHb2qSBwNIIVJkmReQ+1keGadwijEXoP2u39ZR5qiVEgDmdH/C467yAVvu0COFZ1PonJ/uMa0I3YwpEUD5k1nBPe/W4dxdqxA5fD9TtRAqx06N3CL+6L+xMfFeATJl7MKpvF/
+cloud_cce:
+  - cloud: "prod-private"
+    name: "testcluster"
+    flavor: "cce.s2.small"
+    router: "vpc-linux"
+    network: "network-linux"
+    network_mode: "overlay_l2"
+    nodes:
+      - name: "testcluster-01"
+        flavor: "s3.large.2"
+        az: "eu-de-01"
+        os: "CentOS 7.7"
+      - name: "testcluster-02"
+        flavor: "s3.large.2"
+        az: "eu-de-02"
+        os: "CentOS 7.7"
+
+elb:
+  cloud: "prod-private"
+  name: "testelb"
+  vip_subnet: "subnet-linux"
+  public_ip_address: 80.158.51.36
+
+
+helm_chart_instances:
+  external_cert-manager:
+    context: external 
+    repo_url: https://charts.jetstack.io
+    repo_name: jetstack
+    name: cert-manager
+    ref: jetstack/cert-manager
+    version: v1.3.1
+    namespace: cert-manager
+    values_template: "templates/charts/cert-manager/cert-manager-values.yaml.j2"
+    post_config_template: "templates/charts/cert-manager/cert-manager-post-config.yaml.j2"
+  external_nginx-ingress:
+    context: external 
+    repo_url: https://kubernetes.github.io/ingress-nginx
+    repo_name: ingress-nginx
+    name: ingress-nginx
+    ref: ingress-nginx/ingress-nginx
+    version: 3.33.0
+    namespace: default
+    values_template: "templates/charts/ingress-nginx/ingress-nginx-values.yaml.j2"

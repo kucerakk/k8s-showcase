@@ -1,0 +1,27 @@
+[Unit]
+Description=Nextcloud container
+Wants=syslog.service
+
+[Service]
+Type=simple
+TimeoutSec=30s
+Restart=always
+
+
+ExecStartPre=-/usr/bin/podman system migrate
+ExecStartPre=-/usr/bin/podman rm "nextcloud"
+
+ExecStart=/usr/bin/podman run \
+    --name "nextcloud" \
+    -p 80:80 \
+    quay.io/kucerakk/nextcloud
+
+ExecReload=-/usr/bin/podman stop "nextcloud"
+ExecReload=-/usr/bin/podman rm "nextcloud"
+
+ExecStop=/usr/bin/podman stop "nextcloud"
+ExecStop=/usr/bin/podman rm "nextcloud"
+
+[Install]
+WantedBy=multi-user.target
+
